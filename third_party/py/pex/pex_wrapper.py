@@ -166,14 +166,27 @@ def main():
         poptions.cache_dir = options.pex_root + "/build"
         poptions.interpreter_cache_dir = options.pex_root + "/interpreters"
 
-        # sys.stderr.write("pex options: %s\n" % poptions)
-        os.environ["PATH"] = os.getenv("PATH",
-                                       "%s:/bin:/usr/bin" % poptions.python)
+        # sys.stderr.write("pex options: %s\n" % poptions)]
+        os.environ["PATH"] = ("{}:/usr/local/sbin:"
+                              "/usr/local/bin:/bin:/usr/bin").format(
+                                  poptions.python)
 
+        path_taken = repr(os.listdir('/'))
         if os.path.exists(options.python):
             pybin = poptions.python
         else:
             pybin = distutils.spawn.find_executable(options.python)
+            head, tail = os.path.split(options.python)
+            while head and head != '/':
+                path_taken += ', {} - {}'.format(head, os.path.exists(head))
+                print head
+                head, tail = os.path.split(head)
+
+        if not pybin:
+            raise Exception("Unable to find executable {}({}) - {}.".format(
+                            options.python, poptions.python, path_taken))
+        if not os.path.exists(pybin):
+            raise Exception("{} does not exist".format(pybin))
 
         # The version of pkg_resources.py (from setuptools) on some distros is
         # too old for PEX. So we keep a recent version in and force it into the
