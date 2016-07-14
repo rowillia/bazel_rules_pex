@@ -7,7 +7,6 @@ Derived from https://github.com/twitter/heron/blob/master/3rdparty/pex/_pex.py
 import functools
 import optparse
 import os
-import pkg_resources
 import shutil
 import sys
 import tempfile
@@ -37,6 +36,7 @@ if not zipfile.is_zipfile(sys.argv[0]):
 
 # Otherwise, we're running from a PEX, so extract pkg_resources via a resource.
 else:
+    import pkg_resources
     pkg_resources_py_tmp = tempfile.NamedTemporaryFile(
         prefix='pkg_resources.py')
     pkg_resources_py_tmp.write(
