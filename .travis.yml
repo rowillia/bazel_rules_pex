@@ -1,17 +1,14 @@
-matrix:
-  include:
-    - os: linux
+language: java
+
+os:
+  - linux:
       dist: trusty
       sudo: required
       env:
         OS: linux
-
-    - os: osx
+  - osx:
       env:
         OS: darwin
-
-sudo: required
-dist: trusty
 
 addons:
   apt:
